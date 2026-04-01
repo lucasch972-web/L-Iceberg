@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'ICEBERG — Ecosia Parfum</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Bebas+Neue&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ice: #a8e4f0;
+    --deep: #0a1628;
+    --cyan: #00c8e8;
+    --frost: #d6f4fb;
+    --white: #f0fafd;
+    --melt: #4ab8d4;
+    --silver: #b8cdd4;
+    --accent: #00e5ff;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, opacity 0.3s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(0,229,255,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.25s ease, width 0.3s, height 0.3s;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 2rem 4rem;
+    background: linear-gradient(to bottom, rgba(10,22,40,0.95), transparent);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+  }
+  .nav-links { display: flex; gap: 3rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--silver);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 0 4rem;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 50%, rgba(0,200,232,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(0,229,255,0.05) 0%, transparent 60%),
+      linear-gradient(160deg, #0a1628 0%, #061020 100%);
+  }
+
+  /* Animated ice particles */
+  .particles {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .particle {
+    position: absolute;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: drift linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes drift {
+    0%   { transform: translateY(110vh) translateX(0) scale(0); opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.2; }
+    100% { transform: translateY(-10vh) translateX(40px) scale(1.5); opacity: 0; }
+  }
+
+  .hero-text { position: relative; z-index: 2; }
+  .hero-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 2rem; height: 1px;
+    background: var(--cyan);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(5rem, 10vw, 9rem);
+    font-weight: 300;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 0.2em;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--ice);
+    display: block;
+  }
+
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--silver);
+    margin: 1.5rem 0 2.5rem;
+    line-height: 1.7;
+    max-width: 420px;
+  }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 1rem;
+    padding: 1rem 2.5rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--accent);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+  }
+  .hero-cta:hover::before { transform: translateX(0); }
+  .hero-cta:hover { color: var(--deep); }
+  .hero-cta span { position: relative; z-index: 1; }
+
+  /* Bottle Visual */
+  .hero-bottle {
+    position: relative; z-index: 2;
+    display: flex; justify-content: center; align-items: center;
+    height: 80vh;
+  }
+
+  .bottle-container {
+    position: relative;
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(0.5deg); }
+  }
+
+  .bottle-svg {
+    width: 280px;
+    filter: drop-shadow(0 30px 60px rgba(0,200,232,0.3));
+  }
+
+  .bottle-glow {
+    position: absolute;
+    inset: -40px;
+    background: radial-gradient(ellipse, rgba(0,200,232,0.15) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+  }
+
+  .drip {
+    position: absolute;
+    top: -10px; left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    border-radius: 0 0 3px 3px;
+    animation: drip-anim 3s ease-in-out infinite;
+  }
+  @keyframes drip-anim {
+    0%, 100% { height: 0; opacity: 0; }
+    40% { height: 40px; opacity: 1; }
+    80% { height: 60px; opacity: 0.5; }
+  }
+
+  /* REVEAL on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* SECTION BASE */
+  section { padding: 8rem 4rem; position: relative; }
+
+  .section-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 4rem;
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(0,200,232,0.4), transparent);
+  }
+
+  /* DESIGN PRODUIT */
+  .design-section {
+    background: linear-gradient(to bottom, var(--deep), #060f1e);
+  }
+
+  .design-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .design-manifesto {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.35;
+    color: var(--white);
+  }
+  .design-manifesto em {
+    color: var(--ice);
+    font-style: italic;
+  }
+
+  .design-body {
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: var(--silver);
+    padding-top: 1rem;
+  }
+
+  .design-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 4rem;
+  }
+  .stat-box {
+    border: 1px solid rgba(0,200,232,0.2);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-box::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 2px; height: 100%;
+    background: var(--accent);
+  }
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--silver);
+    margin-top: 0.5rem;
+  }
+
+  /* SKETCHES */
+  .sketches-section {
+    background: #060f1e;
+  }
+
+  .sketches-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 4rem;
+  }
+  .sketches-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .sketch-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(0,200,232,0.1);
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.4s, transform 0.4s;
+  }
+  .sketch-card:hover {
+    border-color: rgba(0,200,232,0.4);
+    transform: translateY(-4px);
+  }
+  .sketch-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.85) contrast(1.05);
+    transition: filter 0.4s;
+  }
+  .sketch-card:hover img { filter: brightness(1) contrast(1.1); }
+
+  .sketch-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(6,15,30,0.95) 0%, transparent 100%);
+    padding: 2rem;
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+  }
+  .sketch-card:hover .sketch-overlay { transform: translateY(0); }
+  .sketch-overlay-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .sketch-overlay-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    margin-top: 0.3rem;
+  }
+
+  .sketches-layout {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: 400px 300px;
+    gap: 1.5rem;
+  }
+  .sketch-main { grid-row: 1 / 3; }
+
+  /* INSPIRATIONS */
+  .inspo-section {
+    background: linear-gradient(to bottom, #060f1e, var(--deep));
+    overflow: hidden;
+  }
+
+  .inspo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 3rem;
+  }
+  .inspo-item {
+    position: relative;
+    overflow: hidden;
+    height: 55vh;
+  }
+  .inspo-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7) saturate(0.8);
+    transform: scale(1.05);
+    transition: transform 0.8s ease, filter 0.8s ease;
+  }
+  .inspo-item:hover img {
+    transform: scale(1);
+    filter: brightness(0.9) saturate(1);
+  }
+  .inspo-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 3rem 2.5rem;
+    background: linear-gradient(to top, rgba(6,15,30,0.9) 0%, transparent 100%);
+  }
+  .inspo-caption-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 0.5rem;
+  }
+  .inspo-caption-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--white);
+    font-style: italic;
+  }
+  .inspo-divider {
+    position: absolute; top: 0; bottom: 0; left: 50%;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+
+  /* 3D SECTION */
+  .render-section {
+    min-height: 90vh;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 4rem;
+  }
+
+  .render-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,200,232,0.07) 0%, transparent 70%),
+      #060f1e;
+  }
+
+  .render-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 5rem;
+    position: relative; z-index: 2;
+  }
+  .render-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1;
+  }
+  .render-desc {
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: var(--silver);
+    padding-top: 1rem;
+    border-left: 1px solid rgba(0,200,232,0.3);
+    padding-left: 2rem;
+  }
+
+  .render-frame {
+    position: relative; z-index: 2;
+    border: 1px solid rgba(0,200,232,0.15);
+    overflow: hidden;
+    height: 60vh;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.3);
+  }
+
+  .render-placeholder {
+    text-align: center;
+  }
+  .render-placeholder-icon {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 8rem;
+    color: rgba(0,200,232,0.1);
+    line-height: 1;
+  }
+  .render-placeholder-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(0,200,232,0.4);
+    margin-top: 1rem;
+  }
+
+  .render-tags {
+    position: absolute; top: 2rem; right: 2rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .render-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(0,200,232,0.3);
+    color: var(--cyan);
+    background: rgba(0,200,232,0.05);
+  }
+
+  /* FEATURES */
+  .features-section {
+    background: var(--deep);
+    padding: 8rem 4rem;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    margin-top: 4rem;
+  }
+  .feature-item {
+    padding: 3rem 2.5rem;
+    border: 1px solid rgba(0,200,232,0.1);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.4s;
+  }
+  .feature-item:hover { border-color: rgba(0,200,232,0.4); }
+  .feature-item::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--accent), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .feature-item:hover::after { transform: scaleX(1); }
+  .feature-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: rgba(0,200,232,0.15);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  .feature-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+  .feature-body {
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: var(--silver);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 5rem 4rem;
+    border-top: 1px solid rgba(0,200,232,0.1);
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--white);
+    letter-spacing: 0.1em;
+    line-height: 1;
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--silver);
+    font-size: 1rem;
+    margin-top: 0.5rem;
+  }
+  .footer-right {
+    text-align: right;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    line-height: 2;
+  }
+
+  /* ICE line decoration */
+  .ice-line {
+    width: 100%; height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent), transparent);
+    opacity: 0.3;
+    margin: 4rem 0;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--deep); }
+  ::-webkit-scrollbar-thumb { background: var(--melt); border-radius: 2px; }
+
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Ecosia × L'Iceberg</div>
+  <ul class="nav-links">
+    <li><a href="#design">Design Produit</a></li>
+    <li><a href="#conception">Conception</a></li>
+    <li><a href="#3d">Rendu 3D</a></li>
+    <li><a href="#inspiration">Inspirations</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="particles" id="particles"></div>
+
+  <div class="hero-text">
+    <div class="hero-eyebrow reveal">Ecosia — Design Engagé 2025</div>
+    <h1 class="hero-title reveal">
+      L'<em>Iceberg</em>
+    </h1>
+    <p class="hero-sub reveal">
+      Un parfum conçu non pas pour séduire, mais pour alerter. 
+      La fraîcheur absolue d'un monde qui disparaît.
+    </p>
+    <a href="#design" class="hero-cta reveal">
+      <span>Découvrir le projet</span>
+      <span>↓</span>
+    </a>
+  </div>
+
+  <div class="hero-bottle reveal">
+    <div class="bottle-container">
+      <div class="bottle-glow"></div>
+      <!-- SVG Bottle Illustration -->
+      <svg class="bottle-svg" viewBox="0 0 280 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cap -->
+        <ellipse cx="140" cy="42" rx="38" ry="12" fill="rgba(180,220,235,0.5)" stroke="rgba(0,200,232,0.6)" stroke-width="1"/>
+        <rect x="110" y="30" width="60" height="24" rx="8" fill="rgba(180,220,235,0.3)" stroke="rgba(0,200,232,0.5)" stroke-width="1"/>
+        <!-- Drip on cap -->
+        <path d="M140 54 Q142 62 140 72 Q138 62 140 54Z" fill="rgba(0,229,255,0.8)"/>
+        <!-- Neck -->
+        <rect x="122" y="54" width="36" height="30" rx="4" fill="rgba(100,190,220,0.2)" stroke="rgba(0,200,232,0.4)" stroke-width="1"/>
+        <!-- Main bottle body -->
+        <path d="M60 110 Q55 108 52 200 Q50 290 55 360 Q58 390 80 398 Q140 408 200 398 Q222 390 225 360 Q230 290 228 200 Q225 108 220 110 Z" 
+              fill="rgba(0,160,200,0.08)" stroke="rgba(0,200,232,0.5)" stroke-width="1.5"/>
+        <!-- Inner liquid -->
+        <path d="M70 180 Q68 220 68 290 Q69 350 78 370 Q140 382 202 370 Q211 350 212 290 Q212 220 210 180 Z" 
+              fill="rgba(0,200,232,0.25)"/>
+        <!-- Faceted base highlights -->
+        <path d="M60 110 L80 100 L140 95 L200 100 L220 110" stroke="rgba(0,229,255,0.3)" stroke-width="1" fill="none"/>
+        <!-- Logo area -->
+        <rect x="85" y="230" width="110" height="50" rx="2" fill="rgba(0,0,0,0.2)" stroke="rgba(0,200,232,0.2)" stroke-width="0.5"/>
+        <!-- Bottle shine -->
+        <path d="M75 140 Q78 200 76 300" stroke="rgba(255,255,255,0.15)" stroke-width="6" stroke-linecap="round"/>
+        <!-- Bottom facet -->
+        <ellipse cx="140" cy="395" rx="65" ry="12" fill="rgba(0,200,232,0.1)" stroke="rgba(0,200,232,0.3)" stroke-width="1"/>
+        <!-- Text on bottle -->
+        <text x="140" y="253" text-anchor="middle" fill="rgba(180,230,245,0.9)" font-family="'Cormorant Garamond', serif" font-size="11" letter-spacing="3" font-style="italic">L'ICEBERG</text>
+        <text x="140" y="270" text-anchor="middle" fill="rgba(0,200,232,0.6)" font-family="'DM Sans', sans-serif" font-size="6" letter-spacing="4">FRAÎCHEUR ABSOLUE</text>
+        <!-- Ecosia mark -->
+        <text x="140" y="290" text-anchor="middle" fill="rgba(0,200,232,0.4)" font-family="'DM Sans', sans-serif" font-size="6" letter-spacing="3">ECOSIA PARFUM</text>
+      </svg>
+      <div class="drip" style="left:48%; width:2px;"></div>
+      <div class="drip" style="left:52%; width:2px; animation-delay:1.2s;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- DESIGN PRODUIT -->
+<section class="design-section" id="design">
+  <div class="section-label reveal">01 — Design Produit</div>
+  <div class="design-grid">
+    <div class="reveal">
+      <h2 class="design-manifesto">
+        À l'origine, un parfum séduit.<br>
+        <em>Ici, il alerte.</em>
+      </h2>
+      <div class="ice-line"></div>
+      <div class="design-stats">
+        <div class="stat-box reveal">
+          <div class="stat-number">87%</div>
+          <div class="stat-label">Des glaciers en recul depuis 1950</div>
+        </div>
+        <div class="stat-box reveal">
+          <div class="stat-number">1,2°C</div>
+          <div class="stat-label">Hausse moyenne depuis l'ère industrielle</div>
+        </div>
+        <div class="stat-box reveal">
+          <div class="stat-number">50%</div>
+          <div class="stat-label">Glaciers menacés de disparition d'ici 2100</div>
+        </div>
+        <div class="stat-box reveal">
+          <div class="stat-number">2B</div>
+          <div class="stat-label">Tonnes de glace perdues chaque année</div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <p class="design-body">
+        Le parfum est un produit de consommation destiné au plus grand nombre. Ici, il est repensé comme un objet engagé, conçu pour sensibiliser aux enjeux écologiques et s'associer à des causes responsables, telles que la fonte des glaciers.
+        <br><br>
+        <em style="color:var(--ice); font-family:'Cormorant Garamond',serif; font-size:1.1rem;">L'Iceberg</em> incarne la tension entre le luxe et l'urgence, entre la beauté d'un monde arctique et sa disparition programmée. Chaque flacon vendu contribue directement aux programmes de reforestation d'Ecosia.
+        <br><br>
+        Le design s'inspire de la structure cristalline des icebergs : base facettée qui réfracte la lumière, liquide cyan qui rappelle les eaux polaires, capuchon en goutte d'eau, symbole d'un monde qui fond.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SKETCHES DE CONCEPTION -->
+<section class="sketches-section" id="conception">
+  <div class="section-label reveal">02 — Sketches de Conception</div>
+  <div class="sketches-header reveal">
+    <h2 class="sketches-title">Du croquis<br>au flacon</h2>
+  </div>
+
+  <div class="sketches-layout reveal">
+    <div class="sketch-card sketch-main">
+      <img src="/mnt/user-data/uploads/Capture_d_écran_2026-03-31_161042.png" alt="Sketches de conception L'Iceberg">
+      <div class="sketch-overlay">
+        <div class="sketch-overlay-label">Vue éclatée complète</div>
+        <div class="sketch-overlay-title">Anatomie du flacon</div>
+      </div>
+    </div>
+    <div class="sketch-card">
+      <div style="height:100%; background: linear-gradient(135deg, rgba(0,200,232,0.05), rgba(0,20,40,0.8)); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1rem; padding:2rem; text-align:center;">
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:0.3em; color:var(--cyan);">Drip Cap</div>
+        <div style="font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--silver); font-size:0.9rem;">Détail peint à la main, symbolisant la fonte irréversible</div>
+        <div style="width:3px; height:60px; background:linear-gradient(to bottom, var(--accent), transparent);"></div>
+      </div>
+    </div>
+    <div class="sketch-card">
+      <div style="height:100%; background: rgba(0,200,232,0.03); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1rem; padding:2rem; text-align:center; border-top: 1px solid rgba(0,200,232,0.1);">
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:0.3em; color:var(--cyan);">Faceted Base</div>
+        <div style="font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--silver); font-size:0.9rem;">Faces intérieures réfractives inspirées de la structure glaciaire</div>
+        <div style="font-family:'DM Sans',sans-serif; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(0,200,232,0.5);">Cyan Liquid — Refractive Inner Facets</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3D RENDER -->
+<section class="render-section" id="3d">
+  <div class="render-bg"></div>
+  <div class="render-header">
+    <div class="reveal">
+      <div class="section-label">03 — Rendu 3D</div>
+      <h2 class="render-title">Design 3D<br>du parfum</h2>
+    </div>
+    <p class="render-desc reveal">
+      Le rendu tridimensionnel révèle l'identité visuelle complète du flacon — la transparence glacée du verre, le tourbillon bleu lavande de l'essence, le logo Ecosia incrusté dans le cristal. Une sculpture numérique avant d'être un objet physique.
+    </p>
+  </div>
+
+  <div class="render-frame reveal">
+    <img src="/mnt/user-data/uploads/Capture_d_écran_2026-03-31_161047.png" 
+         alt="Design 3D L'Iceberg" 
+         style="width:100%; height:100%; object-fit:cover; filter:brightness(0.9) contrast(1.05);">
+    <div class="render-tags">
+      <div class="render-tag">Verre facetté</div>
+      <div class="render-tag">Logo Ecosia</div>
+      <div class="render-tag">Cyan liquid</div>
+      <div class="render-tag">3D render</div>
+    </div>
+  </div>
+</section>
+
+<!-- INSPIRATIONS -->
+<section class="inspo-section" id="inspiration">
+  <div class="section-label reveal" style="padding: 0 0 2rem;">04 — Recherches et Inspirations</div>
+  <h2 class="sketches-title reveal" style="font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,5vw,4.5rem); font-weight:300; margin-bottom:1rem;">
+    Entre feu et glace
+  </h2>
+  <p style="color:var(--silver); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; margin-bottom:0; max-width:600px;" class="reveal">
+    La dialectique du luxe brûlant et de la nature qui s'effondre — deux mondes en collision, une seule urgence.
+  </p>
+
+  <div class="inspo-grid reveal">
+    <div class="inspo-item">
+      <img src="/mnt/user-data/uploads/Capture_d_écran_2026-03-31_161029.png" alt="Inspiration — parfum en feu">
+      <div class="inspo-caption">
+        <div class="inspo-caption-label">Référence luxe</div>
+        <div class="inspo-caption-title">Le feu du désir</div>
+      </div>
+    </div>
+    <div class="inspo-divider"></div>
+    <div class="inspo-item">
+      <img src="/mnt/user-data/uploads/Capture_d_écran_2026-03-31_161029.png" alt="Inspiration — iceberg" style="object-position: right;">
+      <div style="position:absolute; inset:0; background:rgba(0,100,140,0.15);"></div>
+      <div class="inspo-caption">
+        <div class="inspo-caption-label">Source naturelle</div>
+        <div class="inspo-caption-title">La glace qui s'effondre</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="section-label reveal">05 — Caractéristiques du Projet</div>
+  <div class="features-grid">
+    <div class="feature-item reveal">
+      <div class="feature-num">01</div>
+      <div class="feature-title">Objet Engagé</div>
+      <p class="feature-body">Chaque flacon vendu finance la plantation d'arbres via Ecosia. Le parfum devient acte militant, transformant le geste d'achat en contribution écologique mesurable.</p>
+    </div>
+    <div class="feature-item reveal">
+      <div class="feature-num">02</div>
+      <div class="feature-title">Design Symbolique</div>
+      <p class="feature-body">Base facettée inspirée des cristaux de glace, capuchon en forme de goutte d'eau, liquide cyan des eaux polaires. Chaque détail raconte la fonte des glaciers.</p>
+    </div>
+    <div class="feature-item reveal">
+      <div class="feature-num">03</div>
+      <div class="feature-title">Fragrances Arctiques</div>
+      <p class="feature-body">Notes de tête : air glacé, eau de fonte. Cœur : écorce de bouleau blanc, moss de toundra. Fond : ambre froid, bois de dérive arctique.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">L'<span>Iceberg</span></div>
+    <div class="footer-tagline">Fraîcheur Absolue — Ecosia Parfum</div>
+  </div>
+  <div class="footer-right">
+    <div>Projet Design Produit</div>
+    <div>Sensibilisation Écologique</div>
+    <div style="color:rgba(0,200,232,0.4); margin-top:1rem;">© 2025 Ecosia</div>
+  </div>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) *.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Particles
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random() * 100}%;
+      animation-duration:${Math.random() * 12 + 8}s;
+      animation-delay:${Math.random() * 8}s;
+    `;
+    container.appendChild(p);
+  }
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
